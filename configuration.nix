@@ -17,6 +17,9 @@
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
+  # Change nix path
+  nix.nixPath = [ "nixos-config=$HOME/nixos/configuraion.nix" ];
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -42,11 +45,27 @@
     LC_TIME = "ru_RU.UTF-8";
   };
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
+  services = {
+    xserver = {
+      enable = true;
+      displayManager.sddm.enable = true;
+      xkb = {
+        layout = "us";
+        variant = ""; 
+      };
+    };
+    pipewire = {
+        enable = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
+    };
+    dbus.enable = true;
   };
+
+  # Enable audio
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.tenshi = {
@@ -77,14 +96,6 @@
     withUWSM = true;
   };
 
-  services = {
-    xserver = {
-      enable = true;
-      displayManager.sddm.enable = true;
-    };
-    dbus.enable = true;
-  };
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -106,9 +117,7 @@
     polkit-kde-agent
   ];
 
-  # Enable audio
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+
 
   # Enable fonts
   fonts.packages = with pkgs; [
