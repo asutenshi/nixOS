@@ -59,6 +59,32 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Configure git
+  programs.git.config = {
+    user.name = "tenshi";
+    user.email = "zakan.6000@gmail.com";
+  };
+
+  # Configure path for scripts
+  environment.sessionVariables = {
+    PATH = [ "$HOME/scripts" ];
+  };
+
+  # Hyperland settings
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+    withUWSM = true;
+  };
+
+  services = {
+    xserver = {
+      enable = true;
+      displayManager.sddm.enable = true;
+    };
+    dbus.enable = true;
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -66,6 +92,29 @@
     neovim
     git
     firefox
+    kitty
+    waybar
+    wofi
+    dunst
+    swww
+    networkmanagerapplet
+    pulseaudio
+    brightnessctl
+    grim
+    slurp
+    wl-clipboard
+    polkit-kde-agent
+  ];
+
+  # Enable audio
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
+
+  # Enable fonts
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-emoji
+    font-awesome
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
